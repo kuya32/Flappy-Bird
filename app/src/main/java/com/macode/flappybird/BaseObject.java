@@ -10,7 +10,6 @@ public class BaseObject {
     protected Bitmap bm;
 
     public BaseObject() {
-
     }
 
     public BaseObject(float x, float y, int width, int height) {

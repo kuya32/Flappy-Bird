@@ -8,6 +8,7 @@ import android.graphics.Color;
 
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -45,5 +46,13 @@ public class GameViewActivity extends View {
         bird.draw(canvas);
         // Update every 0.01 seconds
         handler.postDelayed(runnable, 10);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            bird.setDrop(-15);
+        }
+        return true;
     }
 }

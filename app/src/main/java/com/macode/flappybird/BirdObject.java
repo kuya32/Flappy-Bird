@@ -2,6 +2,7 @@ package com.macode.flappybird;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 import java.util.ArrayList;
 
@@ -54,6 +55,28 @@ public class BirdObject extends BaseObject {
             }
             count = 0;
         }
+
+        if (this.drop < 0) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(-25);
+            return Bitmap.createBitmap(arrayBms.get(idCurrentBitmap), 0, 0, arrayBms.get(idCurrentBitmap).getWidth(), arrayBms.get(idCurrentBitmap).getHeight(), matrix, true);
+        } else if (drop >= 0) {
+            Matrix matrix = new Matrix();
+            if (drop < 70) {
+                matrix.postRotate(-25 + (drop*2));
+            } else {
+                matrix.postRotate(45);
+            }
+            return Bitmap.createBitmap(arrayBms.get(idCurrentBitmap), 0, 0, arrayBms.get(idCurrentBitmap).getWidth(), arrayBms.get(idCurrentBitmap).getHeight(), matrix, true);
+        }
         return this.arrayBms.get(idCurrentBitmap);
+    }
+
+    public float getDrop() {
+        return drop;
+    }
+
+    public void setDrop(float drop) {
+        this.drop = drop;
     }
 }
