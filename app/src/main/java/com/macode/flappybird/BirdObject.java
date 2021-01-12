@@ -7,13 +7,24 @@ import java.util.ArrayList;
 
 public class BirdObject extends BaseObject {
     private ArrayList<Bitmap> arrayBms = new ArrayList<>();
+    private int count, vFlap, idCurrentBitmap;
+    private float drop;
 
     public BirdObject() {
-
+        this.count = 0;
+        this.vFlap = 5;
+        this.idCurrentBitmap = 0;
+        this.drop = 0;
     }
 
     public void draw(Canvas canvas) {
+        drop();
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);
+    }
+
+    private void drop() {
+        this.drop += 0.6;
+        this.y += this.drop;
     }
 
     public ArrayList<Bitmap> getArrayBms() {
@@ -28,9 +39,21 @@ public class BirdObject extends BaseObject {
         }
     }
 
-    // Retrieves the first Bitmap
     @Override
     public Bitmap getBm() {
-        return this.getArrayBms().get(0);
+        count++;
+        if (this.count == this.vFlap) {
+            for (int i = 0; i < arrayBms.size(); i++) {
+                if (i == arrayBms.size() - 1) {
+                    this.idCurrentBitmap = 0;
+                    break;
+                } else if (this.idCurrentBitmap == i) {
+                    idCurrentBitmap = i + 1;
+                    break;
+                }
+            }
+            count = 0;
+        }
+        return this.arrayBms.get(idCurrentBitmap);
     }
 }

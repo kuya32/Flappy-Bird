@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
