@@ -21,6 +21,7 @@ public class GameViewActivity extends View {
     private Runnable runnable;
     private ArrayList<PipeObject> arrayPipes;
     private int sumPipe, distance;
+    private int score;
 
     public GameViewActivity(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -50,7 +51,7 @@ public class GameViewActivity extends View {
 
     private void initPipe() {
         sumPipe = 6;
-        distance = 300 * Constants.SCREEN_HEIGHT / 1920;
+        distance = 375 * Constants.SCREEN_HEIGHT / 1920;
         arrayPipes = new ArrayList<>();
         for (int i = 0; i < sumPipe; i++) {
             if (i < sumPipe / 2) {
@@ -68,6 +69,10 @@ public class GameViewActivity extends View {
         super.draw(canvas);
         bird.draw(canvas);
         for (int i = 0; i < sumPipe; i++) {
+            if (this.bird.getX() + this.bird.getWidth() > arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 && this.bird.getX() + this.bird.getWidth() <= arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 + PipeObject.speed && i < sumPipe / 2) {
+                score++;
+                MainActivity.textScore.setText("" + score);
+            }
             if (this.arrayPipes.get(i).getX() < -arrayPipes.get(i).getWidth()) {
                 this.arrayPipes.get(i).setX(Constants.SCREEN_WIDTH);
                 if (i < sumPipe / 2) {
