@@ -69,6 +69,7 @@ public class GameViewActivity extends View {
         super.draw(canvas);
         bird.draw(canvas);
         for (int i = 0; i < sumPipe; i++) {
+            //Scoring System: Score increases by one every time the front of the bird passes by half the width of each pipe
             if (this.bird.getX() + this.bird.getWidth() > arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 && this.bird.getX() + this.bird.getWidth() <= arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 + PipeObject.speed && i < sumPipe / 2) {
                 score++;
                 MainActivity.textScore.setText("" + score);
