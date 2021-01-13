@@ -2,13 +2,20 @@ package com.macode.flappybird;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    public static TextView textScore;
+    public static TextView textScore, textBestScore, textScoreOver;
+    public static RelativeLayout relativeLayoutGameOver;
+    public static Button retryButton;
+    private GameViewActivity gameViewActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +29,19 @@ public class MainActivity extends AppCompatActivity {
         Constants.SCREEN_HEIGHT = dm.heightPixels;
         setContentView(R.layout.activity_main);
         textScore = findViewById(R.id.textScore);
+        textBestScore = findViewById(R.id.gameOverBestScoreText);
+        textScoreOver = findViewById(R.id.gameOverScoreText);
+        relativeLayoutGameOver = findViewById(R.id.relativeLayoutGameOver);
+        retryButton = findViewById(R.id.retryButton);
+        gameViewActivity = findViewById(R.id.relativeLayoutGameView);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutGameOver.setVisibility(View.INVISIBLE);
+                gameViewActivity.reset();
+//                Intent goToMainActivity = new Intent(MainActivity.this, MainActivity.class);
+//                MainActivity.this.startActivity(goToMainActivity);
+            }
+        });
     }
 }

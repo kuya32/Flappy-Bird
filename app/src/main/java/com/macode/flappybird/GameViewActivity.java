@@ -21,10 +21,13 @@ public class GameViewActivity extends View {
     private Runnable runnable;
     private ArrayList<PipeObject> arrayPipes;
     private int sumPipe, distance;
-    private int score;
-
+    private int score, bestScore;
+    private boolean reset;
     public GameViewActivity(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        score = 0;
+        bestScore = 0;
+        reset = false;
         initBird();
         initPipe();
         handler = new Handler();
@@ -69,7 +72,15 @@ public class GameViewActivity extends View {
         super.draw(canvas);
         bird.draw(canvas);
         for (int i = 0; i < sumPipe; i++) {
-            //Scoring System: Score increases by one every time the front of the bird passes by half the width of each pipe
+            // Collision System: The game will stop and present end game score if the body box of the bird collides with the pipes
+            if (bird.getRect().intersect(arrayPipes.get(i).getRect()) || bird.getY() - bird.getHeight() < 0 || bird.getY() > Constants.SCREEN_HEIGHT) {
+                PipeObject.speed = 0;
+                MainActivity.textScoreOver.setText(MainActivity.textScore.getText());
+                MainActivity.textBestScore.setText("Best: " + bestScore);
+                MainActivity.textScore.setVisibility(INVISIBLE);
+                MainActivity.relativeLayoutGameOver.setVisibility(VISIBLE);
+            }
+            // Scoring System: Score increases by one every time the front of the bird passes by half the width of each pipe
             if (this.bird.getX() + this.bird.getWidth() > arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 && this.bird.getX() + this.bird.getWidth() <= arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 + PipeObject.speed && i < sumPipe / 2) {
                 score++;
                 MainActivity.textScore.setText("" + score);
@@ -94,5 +105,12 @@ public class GameViewActivity extends View {
             bird.setDrop(-15);
         }
         return true;
+    }
+
+    public void reset() {
+        MainActivity.textScore.setText("0");
+        score = 0;
+        initPipe();
+        initBird();
     }
 }

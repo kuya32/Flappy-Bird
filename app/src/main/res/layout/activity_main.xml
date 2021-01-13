@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
+<RelativeLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <com.macode.flappybird.GameViewActivity
+        android:id="@+id/relativeLayoutGameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <TextView
@@ -18,11 +20,12 @@
         android:layout_marginTop="15dp"/>
 
     <RelativeLayout
-        android:id="@+id/gameOver"
+        android:id="@+id/relativeLayoutGameOver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/gameOverImage"
@@ -59,7 +62,7 @@
             android:textStyle="bold"/>
 
         <Button
-            android:id="@+id/playButton"
+            android:id="@+id/retryButton"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_alignParentEnd="true"
