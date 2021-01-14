@@ -7,6 +7,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,6 +28,11 @@ public class GameViewActivity extends View {
     private int sumPipe, distance;
     private int score, bestScore = 0;
     private Context context;
+    private int soundJump;
+    private float volume;
+    private boolean loadedSound;
+    private SoundPool soundPool;
+
     public GameViewActivity(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
