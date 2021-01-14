@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -52,6 +51,25 @@ public class GameViewActivity extends View {
                 invalidate();
             }
         };
+
+        if (21 <= Build.VERSION.SDK_INT) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            SoundPool.Builder builder = new SoundPool.Builder();
+            builder.setAudioAttributes(audioAttributes).setMaxStreams(5);
+            this.soundPool = builder.build();
+        } else {
+            soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        }
+        this.soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                loadedSound = true;
+            }
+        });
+        soundJump = this.soundPool.load(context, R.raw.jump_02, 1);
     }
 
     private void initBird() {
@@ -125,6 +143,9 @@ public class GameViewActivity extends View {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             bird.setDrop(-15);
+            if (loadedSound) {
+                int streamId = this.soundPool.play(this.soundJump, (float)0.5, (float)0.5, 1, 0, 1f);
+            }
         }
         return true;
     }
