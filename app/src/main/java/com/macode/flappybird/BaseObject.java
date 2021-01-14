@@ -61,7 +61,7 @@ public class BaseObject {
 
     // Used to detect collisions
     public Rect getRect() {
-        return new Rect((int) this.x, (int) this.y, (int) this.x + this.width, (int) this.y + this.height);
+        return new Rect((int) this.x, (int) this.y, (int) this.x + (this.width - 10), (int) this.y + (this.height - 10));
     }
 
     public void setRect(Rect rect) {

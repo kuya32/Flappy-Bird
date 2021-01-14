@@ -1,11 +1,16 @@
 package com.macode.flappybird;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -21,10 +26,22 @@ public class GameViewActivity extends View {
     private Runnable runnable;
     private ArrayList<PipeObject> arrayPipes;
     private int sumPipe, distance;
-    private int score;
+    private int score, bestScore = 0;
+    private Context context;
+    private int soundJump;
+    private float volume;
+    private boolean loadedSound;
+    private SoundPool soundPool;
 
     public GameViewActivity(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("gameSetting", Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            bestScore = sharedPreferences.getInt("bestScore", 0);
+        }
+        score = 0;
+        bestScore = 0;
         initBird();
         initPipe();
         handler = new Handler();
@@ -69,8 +86,25 @@ public class GameViewActivity extends View {
         super.draw(canvas);
         bird.draw(canvas);
         for (int i = 0; i < sumPipe; i++) {
+            // Collision System: The game will stop and present end game score if the body box of the bird collides with the pipes
+            if (bird.getRect().intersect(arrayPipes.get(i).getRect()) || bird.getY() - bird.getHeight() < 0 || bird.getY() > Constants.SCREEN_HEIGHT) {
+                PipeObject.speed = 0;
+                MainActivity.textScoreOver.setText(MainActivity.textScore.getText());
+                MainActivity.textBestScore.setText("Best: " + bestScore);
+                MainActivity.textScore.setVisibility(INVISIBLE);
+                MainActivity.relativeLayoutGameOver.setVisibility(VISIBLE);
+            }
+            // Scoring System: Score increases by one every time the front of the bird passes by half the width of each pipe
             if (this.bird.getX() + this.bird.getWidth() > arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 && this.bird.getX() + this.bird.getWidth() <= arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 + PipeObject.speed && i < sumPipe / 2) {
                 score++;
+                // Keeps track of your best score
+                if (score > bestScore) {
+                    bestScore = score;
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("gameSetting", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("bestScore", bestScore);
+                    editor.apply();
+                }
                 MainActivity.textScore.setText("" + score);
             }
             if (this.arrayPipes.get(i).getX() < -arrayPipes.get(i).getWidth()) {
@@ -93,5 +127,13 @@ public class GameViewActivity extends View {
             bird.setDrop(-15);
         }
         return true;
+    }
+
+    public void reset() {
+        MainActivity.textScore.setVisibility(VISIBLE);
+        MainActivity.textScore.setText("0");
+        score = 0;
+        initPipe();
+        initBird();
     }
 }
