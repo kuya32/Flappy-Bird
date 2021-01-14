@@ -1,4 +1,4 @@
-package com.macode.flappybird;
+package com.macode.flappybird.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +16,11 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.macode.flappybird.Constants;
+import com.macode.flappybird.objects.PipeObject;
+import com.macode.flappybird.R;
+import com.macode.flappybird.objects.BirdObject;
 
 import java.util.ArrayList;
 
@@ -52,17 +57,25 @@ public class GameViewActivity extends View {
             }
         };
 
+
         if (21 <= Build.VERSION.SDK_INT) {
+            // Controls the sound system
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    // Specifies the context in which the stream is used, in the case a game
+                    // Why the sound is playing and that the sound is used for
                     .setUsage(AudioAttributes.USAGE_GAME)
+                    // Specifies what the source is playing
+                    // Sonification is used to accompany a user action
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build();
+            // Manages and plays audio resources for application
             SoundPool.Builder builder = new SoundPool.Builder();
             builder.setAudioAttributes(audioAttributes).setMaxStreams(5);
             this.soundPool = builder.build();
         } else {
             soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         }
+        // Called when a sound has completed loading
         this.soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
@@ -71,6 +84,7 @@ public class GameViewActivity extends View {
         });
         soundJump = this.soundPool.load(context, R.raw.jump_02, 1);
     }
+
 
     private void initBird() {
         bird = new BirdObject();
@@ -125,6 +139,8 @@ public class GameViewActivity extends View {
                 }
                 MainActivity.textScore.setText("" + score);
             }
+
+            // Setting the loop for the pipes
             if (this.arrayPipes.get(i).getX() < -arrayPipes.get(i).getWidth()) {
                 this.arrayPipes.get(i).setX(Constants.SCREEN_WIDTH);
                 if (i < sumPipe / 2) {
@@ -139,6 +155,7 @@ public class GameViewActivity extends View {
         handler.postDelayed(runnable, 10);
     }
 
+    // Gives the bird the flying effect and sound
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -150,6 +167,7 @@ public class GameViewActivity extends View {
         return true;
     }
 
+    // Resets the game
     public void reset() {
         MainActivity.textScore.setVisibility(VISIBLE);
         MainActivity.textScore.setText("0");

@@ -1,4 +1,4 @@
-package com.macode.flappybird;
+package com.macode.flappybird.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;

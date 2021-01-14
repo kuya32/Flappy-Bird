@@ -1,8 +1,7 @@
-package com.macode.flappybird;
+package com.macode.flappybird.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,6 +10,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.macode.flappybird.Constants;
+import com.macode.flappybird.R;
 
 public class MainActivity extends AppCompatActivity {
     public static TextView textScore, textBestScore, textScoreOver;
@@ -36,16 +38,16 @@ public class MainActivity extends AppCompatActivity {
         relativeLayoutGameOver = findViewById(R.id.relativeLayoutGameOver);
         retryButton = findViewById(R.id.retryButton);
         gameViewActivity = findViewById(R.id.relativeLayoutGameView);
+        // Retry button that resets the game and makes game over layout invisible
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 relativeLayoutGameOver.setVisibility(View.INVISIBLE);
                 gameViewActivity.reset();
-//                Intent goToMainActivity = new Intent(MainActivity.this, MainActivity.class);
-//                MainActivity.this.startActivity(goToMainActivity);
             }
         });
 
+        // Sets background music in main activity
         mediaPlayer = MediaPlayer.create(this, R.raw.sillychipsong);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
