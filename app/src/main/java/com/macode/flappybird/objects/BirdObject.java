@@ -1,8 +1,10 @@
-package com.macode.flappybird;
+package com.macode.flappybird.objects;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+
+import com.macode.flappybird.objects.BaseObject;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ public class BirdObject extends BaseObject {
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);
     }
 
+    // Function that handles birds gravity
     private void drop() {
         this.drop += 0.6;
         this.y += this.drop;
@@ -42,6 +45,7 @@ public class BirdObject extends BaseObject {
 
     @Override
     public Bitmap getBm() {
+        // Switches between the two bird images to create the flapping animation of the bird
         count++;
         if (this.count == this.vFlap) {
             for (int i = 0; i < arrayBms.size(); i++) {
@@ -56,6 +60,7 @@ public class BirdObject extends BaseObject {
             count = 0;
         }
 
+        // Angles the bird bitmap depending on when the user clicks to make the bird jump
         if (this.drop < 0) {
             Matrix matrix = new Matrix();
             matrix.postRotate(-25);
