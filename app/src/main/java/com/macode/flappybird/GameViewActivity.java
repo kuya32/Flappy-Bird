@@ -1,6 +1,7 @@
 package com.macode.flappybird;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,13 +22,17 @@ public class GameViewActivity extends View {
     private Runnable runnable;
     private ArrayList<PipeObject> arrayPipes;
     private int sumPipe, distance;
-    private int score, bestScore;
-    private boolean reset;
+    private int score, bestScore = 0;
+    private Context context;
     public GameViewActivity(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("gameSetting", Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            bestScore = sharedPreferences.getInt("bestScore", 0);
+        }
         score = 0;
         bestScore = 0;
-        reset = false;
         initBird();
         initPipe();
         handler = new Handler();
@@ -83,6 +88,14 @@ public class GameViewActivity extends View {
             // Scoring System: Score increases by one every time the front of the bird passes by half the width of each pipe
             if (this.bird.getX() + this.bird.getWidth() > arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 && this.bird.getX() + this.bird.getWidth() <= arrayPipes.get(i).getX() + arrayPipes.get(i).getWidth() / 2 + PipeObject.speed && i < sumPipe / 2) {
                 score++;
+                // Keeps track of your best score
+                if (score > bestScore) {
+                    bestScore = score;
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("gameSetting", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("bestScore", bestScore);
+                    editor.apply();
+                }
                 MainActivity.textScore.setText("" + score);
             }
             if (this.arrayPipes.get(i).getX() < -arrayPipes.get(i).getWidth()) {
@@ -108,6 +121,7 @@ public class GameViewActivity extends View {
     }
 
     public void reset() {
+        MainActivity.textScore.setVisibility(VISIBLE);
         MainActivity.textScore.setText("0");
         score = 0;
         initPipe();
